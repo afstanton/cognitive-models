@@ -32,6 +32,12 @@ impl Config {
     }
 }
 
+impl crate::model::ModelConfig for Config {
+    fn vector_size(&self) -> usize {
+        self.hidden_size
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct RotaryEmbedding {
     sin: Tensor,

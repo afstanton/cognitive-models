@@ -6,8 +6,8 @@
 //! automatically enables for `cargo test` within this crate.
 
 use candle_core::{DType, Device, Tensor};
-use cognitive_models::model::test_support::{CallKind, RecordingModel};
 use cognitive_models::CognitiveLM;
+use cognitive_models::model::test_support::{CallKind, RecordingModel};
 
 // -----------------------------------------------------------------------
 // RecordingModel trait contract

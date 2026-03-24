@@ -26,3 +26,6 @@ candle-core = { version = "0.9" }
 candle-nn = { version = "0.9" }
 candle-transformers = { version = "0.9" }
 serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+serde_json = { version = "1" }

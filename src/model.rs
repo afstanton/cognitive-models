@@ -21,6 +21,19 @@
 
 use candle_core::{DType, Result, Tensor};
 
+/// Implemented by every model config struct in this crate.
+///
+/// Allows callers to query model dimensions from a deserialized `config.json`
+/// *without* loading model weights — useful for provisioning vector storage
+/// (e.g. pgvector column size) or validating compatibility between models.
+pub trait ModelConfig {
+    /// The dimensionality of embedding vectors this model produces.
+    ///
+    /// Equals `hidden_size` for all current models. Use this when provisioning
+    /// pgvector columns, allocating buffers, or checking model compatibility.
+    fn vector_size(&self) -> usize;
+}
+
 /// A language model capable of autoregressive generation and soft prompt injection.
 ///
 /// Implementors must be `Send` so they can live inside a `tokio::sync::Mutex`.
