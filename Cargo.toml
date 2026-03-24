@@ -2,5 +2,8 @@
 name = "cognitive-models"
 version = "0.1.0"
 edition = "2024"
+description = "Candle-based transformer model implementations with a model-agnostic CognitiveLM trait for generation and embedding"
+license = "MIT"
+repository = "https://github.com/afstanton/cognitive-models"
 
 [dependencies]
