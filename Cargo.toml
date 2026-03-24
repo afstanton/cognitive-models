@@ -1,9 +1,28 @@
 [package]
 name = "cognitive-models"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "Candle-based transformer model implementations with a model-agnostic CognitiveLM trait for generation and embedding"
 license = "MIT"
 repository = "https://github.com/afstanton/cognitive-models"
 
+[features]
+default = ["metal", "test-support"]
+metal = [
+    "candle-core/metal",
+    "candle-nn/metal",
+    "candle-transformers/metal",
+]
+cuda = [
+    "candle-core/cuda",
+    "candle-nn/cuda",
+    "candle-transformers/cuda",
+]
+# Expose RecordingModel and test helpers to downstream crates in their test builds
+test-support = []
+
 [dependencies]
+candle-core = { version = "*" }
+candle-nn = { version = "*" }
+candle-transformers = { version = "*" }
+serde = { version = "*", features = ["derive"] }
