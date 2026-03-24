@@ -22,7 +22,7 @@ cuda = [
 test-support = []
 
 [dependencies]
-candle-core = { version = "*" }
-candle-nn = { version = "*" }
-candle-transformers = { version = "*" }
-serde = { version = "*", features = ["derive"] }
+candle-core = { version = "0.9" }
+candle-nn = { version = "0.9" }
+candle-transformers = { version = "0.9" }
+serde = { version = "1", features = ["derive"] }
