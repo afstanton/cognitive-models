@@ -44,8 +44,8 @@ pub struct Config {
     /// models may have fewer full-attention layers.
     #[serde(default = "Config::default_max_window_layers")]
     pub max_window_layers: usize,
-    #[serde(default = "Config::default_sliding_window")]
-    pub sliding_window: usize,
+    #[serde(default)]
+    pub sliding_window: Option<usize>,
 }
 
 impl Config {
@@ -54,12 +54,12 @@ impl Config {
         usize::MAX
     }
 
-    fn default_sliding_window() -> usize {
-        4096
-    }
-
     pub fn uses_sliding_window(&self, layer_idx: usize) -> bool {
         layer_idx >= self.max_window_layers
+    }
+
+    pub fn sliding_window_size(&self) -> usize {
+        self.sliding_window.unwrap_or(4096)
     }
 }
 
@@ -173,7 +173,7 @@ impl Attention {
             rotary_emb,
             kv_cache: None,
             use_sliding_window: cfg.uses_sliding_window(layer_idx),
-            sliding_window: cfg.sliding_window,
+            sliding_window: cfg.sliding_window_size(),
         })
     }
 
