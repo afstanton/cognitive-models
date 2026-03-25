@@ -80,6 +80,30 @@ fn qwen3_special_tokens_come_from_config() {
     assert_eq!(cfg.default_stop_tokens(), vec![151645]);
 }
 
+#[test]
+fn qwen3_tied_word_embeddings_deserializes_from_config() {
+    let cfg: Config = serde_json::from_str(
+        r#"{
+          "vocab_size": 151936,
+          "hidden_size": 2560,
+          "intermediate_size": 9728,
+          "num_hidden_layers": 36,
+          "num_attention_heads": 32,
+          "num_key_value_heads": 8,
+          "head_dim": 128,
+          "rms_norm_eps": 1e-06,
+          "rope_theta": 1000000,
+          "max_position_embeddings": 40960,
+          "bos_token_id": 151643,
+          "eos_token_id": 151645,
+          "tie_word_embeddings": true
+        }"#,
+    )
+    .expect("config deserialization failed");
+
+    assert!(cfg.tie_word_embeddings);
+}
+
 // -----------------------------------------------------------------------
 // Sliding window layer logic
 // -----------------------------------------------------------------------

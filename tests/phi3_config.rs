@@ -16,6 +16,7 @@ fn make_phi3_config(hidden_size: usize) -> Config {
             "rms_norm_eps": 1e-5,
             "rope_theta": 10000.0,
             "max_position_embeddings": 4096,
+            "tie_word_embeddings": false,
             "bos_token_id": 1,
             "eos_token_id": 32007
         }}"#
@@ -56,4 +57,26 @@ fn phi3_special_tokens_come_from_config() {
     assert_eq!(cfg.bos_token_id(), Some(1));
     assert_eq!(cfg.eos_token_id(), Some(32007));
     assert_eq!(cfg.default_stop_tokens(), vec![32007]);
+}
+
+#[test]
+fn phi3_tied_word_embeddings_deserializes_from_config() {
+    let cfg: Config = serde_json::from_str(
+        r#"{
+            "vocab_size": 32064,
+            "hidden_act": "silu",
+            "hidden_size": 3072,
+            "intermediate_size": 8192,
+            "num_hidden_layers": 32,
+            "num_attention_heads": 32,
+            "num_key_value_heads": 8,
+            "rms_norm_eps": 1e-5,
+            "rope_theta": 10000.0,
+            "max_position_embeddings": 4096,
+            "tie_word_embeddings": true
+        }"#,
+    )
+    .expect("config deserialization failed");
+
+    assert!(cfg.tie_word_embeddings);
 }

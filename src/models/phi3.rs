@@ -22,6 +22,8 @@ pub struct Config {
     pub rope_theta: f64,
     pub bos_token_id: Option<u32>,
     pub eos_token_id: Option<u32>,
+    #[serde(default)]
+    pub tie_word_embeddings: bool,
     pub rope_scaling: Option<String>,
     pub max_position_embeddings: usize,
 }
@@ -289,7 +291,11 @@ impl Model {
             layers.push(layer)
         }
         let norm = RmsNorm::new(cfg.hidden_size, cfg.rms_norm_eps, vb_m.pp("norm"))?;
-        let lm_head = linear(cfg.hidden_size, cfg.vocab_size, vb.pp("lm_head"))?;
+        let lm_head = if cfg.tie_word_embeddings {
+            Linear::from_weights(embed_tokens.embeddings().clone(), None)
+        } else {
+            linear(cfg.hidden_size, cfg.vocab_size, vb.pp("lm_head"))?
+        };
         Ok(Self {
             embed_tokens,
             layers,

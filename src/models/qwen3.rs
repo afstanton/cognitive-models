@@ -38,6 +38,8 @@ pub struct Config {
     pub max_position_embeddings: usize,
     pub bos_token_id: Option<u32>,
     pub eos_token_id: Option<u32>,
+    #[serde(default)]
+    pub tie_word_embeddings: bool,
     /// Number of layers that use FULL attention.
     /// Layers at index >= max_window_layers use sliding window attention.
     /// For Qwen3-8B this equals num_hidden_layers (all full), but smaller
@@ -388,7 +390,11 @@ impl Model {
             )?);
         }
         let norm = RmsNorm::new(cfg.hidden_size, cfg.rms_norm_eps, vb_m.pp("norm"))?;
-        let lm_head = linear(cfg.hidden_size, cfg.vocab_size, vb.pp("lm_head"))?;
+        let lm_head = if cfg.tie_word_embeddings {
+            Linear::from_weights(embed_tokens.embeddings().clone(), None)
+        } else {
+            linear(cfg.hidden_size, cfg.vocab_size, vb.pp("lm_head"))?
+        };
         Ok(Self {
             embed_tokens,
             layers,
