@@ -36,6 +36,14 @@ impl crate::model::ModelConfig for Config {
     fn vector_size(&self) -> usize {
         self.hidden_size
     }
+
+    fn bos_token_id(&self) -> Option<u32> {
+        self.bos_token_id
+    }
+
+    fn eos_token_id(&self) -> Option<u32> {
+        self.eos_token_id
+    }
 }
 
 #[derive(Debug, Clone)]

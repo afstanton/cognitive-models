@@ -15,7 +15,9 @@ fn make_phi3_config(hidden_size: usize) -> Config {
             "num_key_value_heads": 8,
             "rms_norm_eps": 1e-5,
             "rope_theta": 10000.0,
-            "max_position_embeddings": 4096
+            "max_position_embeddings": 4096,
+            "bos_token_id": 1,
+            "eos_token_id": 32007
         }}"#
     );
     serde_json::from_str(&json).expect("config deserialization failed")
@@ -46,4 +48,12 @@ fn phi3_head_dim_derived_correctly() {
     // head_dim = hidden_size / num_attention_heads = 3072 / 32 = 96
     let cfg = make_phi3_config(3072);
     assert_eq!(cfg.head_dim(), 96);
+}
+
+#[test]
+fn phi3_special_tokens_come_from_config() {
+    let cfg = make_phi3_config(3072);
+    assert_eq!(cfg.bos_token_id(), Some(1));
+    assert_eq!(cfg.eos_token_id(), Some(32007));
+    assert_eq!(cfg.default_stop_tokens(), vec![32007]);
 }

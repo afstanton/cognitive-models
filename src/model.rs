@@ -32,6 +32,21 @@ pub trait ModelConfig {
     /// Equals `hidden_size` for all current models. Use this when provisioning
     /// pgvector columns, allocating buffers, or checking model compatibility.
     fn vector_size(&self) -> usize;
+
+    /// The model's beginning-of-sequence token, if one is declared in config.
+    fn bos_token_id(&self) -> Option<u32>;
+
+    /// The model's end-of-sequence token, if one is declared in config.
+    fn eos_token_id(&self) -> Option<u32>;
+
+    /// Default stop tokens for generation.
+    ///
+    /// For current models this is the EOS token when present. Keeping this on
+    /// the config trait lets callers derive a sensible stopping condition
+    /// directly from `config.json` without loading weights or a tokenizer.
+    fn default_stop_tokens(&self) -> Vec<u32> {
+        self.eos_token_id().into_iter().collect()
+    }
 }
 
 /// A language model capable of autoregressive generation and soft prompt injection.

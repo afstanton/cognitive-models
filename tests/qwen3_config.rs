@@ -33,6 +33,8 @@ fn make_config(
             "rms_norm_eps": 1e-6,
             "rope_theta": 1000000.0,
             "max_position_embeddings": 40960,
+            "bos_token_id": 151643,
+            "eos_token_id": 151645,
             "max_window_layers": {max_wl},
             "sliding_window": 4096
         }}"#
@@ -68,6 +70,14 @@ fn qwen3_14b_vector_size() {
 fn qwen3_32b_vector_size() {
     let cfg = make_config(5120, 64, 64, 8, 128, Some(64));
     assert_eq!(cfg.vector_size(), 5120);
+}
+
+#[test]
+fn qwen3_special_tokens_come_from_config() {
+    let cfg = make_config(2560, 36, 32, 8, 80, None);
+    assert_eq!(cfg.bos_token_id(), Some(151643));
+    assert_eq!(cfg.eos_token_id(), Some(151645));
+    assert_eq!(cfg.default_stop_tokens(), vec![151645]);
 }
 
 // -----------------------------------------------------------------------
