@@ -1,6 +1,6 @@
 [package]
 name = "cognitive-models"
-version = "0.3.6"
+version = "0.3.7"
 edition = "2024"
 description = "Candle-based transformer model implementations with a model-agnostic CognitiveLM trait for generation and embedding"
 license = "MIT"
